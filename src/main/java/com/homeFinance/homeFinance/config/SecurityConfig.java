@@ -20,8 +20,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.homeFinance.homeFinance.exeptions.ForbiddenHandler;
-import com.homeFinance.homeFinance.exeptions.UnauthorizedHandler;
+import com.homeFinance.homeFinance.exeption.ForbiddenHandler;
+import com.homeFinance.homeFinance.exeption.UnauthorizedHandler;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 

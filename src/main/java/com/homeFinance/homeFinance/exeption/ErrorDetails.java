@@ -1,4 +1,4 @@
-package com.homeFinance.homeFinance.exeptions;
+package com.homeFinance.homeFinance.exeption;
 
 import java.time.LocalDateTime;
 
