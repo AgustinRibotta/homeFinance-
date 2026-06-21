@@ -28,7 +28,7 @@ public class ForbiddenHandler implements AuthenticationEntryPoint {
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
-                "No autenticado. Por favor iniciá sesión para continuar.",
+                "Not authenticate",
                 request.getRequestURI()
         );
 

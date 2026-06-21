@@ -26,7 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDetails> handleAll(Exception ex, WebRequest request) {
         ErrorDetails error = new ErrorDetails(
                 LocalDateTime.now(),
-                "Ocurrió un error inesperado",
+                "An unexpected error occurred",
                 request.getDescription(false));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDetails> handleTypeMismatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
         ErrorDetails error = new ErrorDetails(
                 LocalDateTime.now(),
-                "Parámetro inválido: " + ex.getName(),
+                "Invalid parameter: " + ex.getName(),
                 request.getDescription(false));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .stream()
                 .findFirst()
                 .map(FieldError::getDefaultMessage)
-                .orElse("Error de validación");
+                .orElse("Validation error");
 
         ErrorDetails error = new ErrorDetails(
                 LocalDateTime.now(),
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDetails> handleDataIntegrity(DataIntegrityViolationException ex, WebRequest request) {
         ErrorDetails error = new ErrorDetails(
                 LocalDateTime.now(),
-                "Ya existe un registro con esos datos",
+                "Duplicate data",
                 request.getDescription(false));
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDetails> handleAuthorizationDenied(AuthorizationDeniedException ex, WebRequest request) {
         ErrorDetails error = new ErrorDetails(
                 LocalDateTime.now(),
-                "No tenés permisos para realizar esta acción",
+                "Unauthorized access",
                 request.getDescription(false));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
