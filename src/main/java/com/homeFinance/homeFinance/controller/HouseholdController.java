@@ -19,6 +19,7 @@ import com.homeFinance.homeFinance.service.HouseholdService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+// Test LazyGit
 @Tag(name = "Households", description = "Managment of the familiar home")
 @RestController
 @RequestMapping("/households")
