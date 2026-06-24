@@ -2,7 +2,6 @@ package com.homeFinance.homeFinance.entity;
 
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,8 +29,8 @@ public class User {
     @Column(length = 250, nullable = false)
     private String password;
 
-	@OneToOne( fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "household_id", referencedColumnName = "id")
+	@ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name = "household_id",nullable = false ,referencedColumnName = "id")
     private Household household;
 
 	public User() {
@@ -84,5 +83,7 @@ public class User {
 	public void setHousehold(Household household) {
 		this.household = household;
 	}
+
+
     
 }
