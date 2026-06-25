@@ -2,6 +2,8 @@ package com.homeFinance.homeFinance.service.imp;
 
 import java.util.UUID;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,8 +14,6 @@ import com.homeFinance.homeFinance.mapper.HouseholdMapper;
 import com.homeFinance.homeFinance.repository.HouseholdRepository;
 import com.homeFinance.homeFinance.service.HouseholdService;
 
-import jakarta.persistence.EntityNotFoundException;
-
 
 @Service
 @Transactional(readOnly = true)
@@ -22,29 +22,24 @@ public class HouseholdServiceImp implements HouseholdService {
     private final HouseholdRepository householdRepository;
     private final HouseholdMapper householdMapper;
 
-	public HouseholdServiceImp(HouseholdRepository householdRepository, HouseholdMapper householdMapper) {
-		this.householdRepository = householdRepository; 
-		this.householdMapper = householdMapper;
-	}
+    public HouseholdServiceImp(HouseholdRepository householdRepository, HouseholdMapper householdMapper) {
+        this.householdRepository = householdRepository; 
+        this.householdMapper = householdMapper;
+    }
 
-	@Override
-	public void addMember(UUID HouseholdId, UUID userId) { // Creating a relationship woth users is required
-		return;
-	}
-
-	@Override
-	@Transactional
+    @Override
+    @Transactional
     public HouseholdResponse create(HouseholdRequest request) {
-		Household entity = householdMapper.toEntity(request);
+        Household entity = householdMapper.toEntity(request);
         Household saved = householdRepository.save(entity);
         return householdMapper.toResponse(saved);
-	}
+    }
 
-	@Override
-	public HouseholdResponse findById(UUID id) {
+    @Override
+    public HouseholdResponse findById(UUID id) {
         Household entity = findHouseholdOrThrow(id);
         return householdMapper.toResponse(entity);
-	}
+    }
 
     @Override
     @Transactional
@@ -56,10 +51,9 @@ public class HouseholdServiceImp implements HouseholdService {
     }
 
     // Helpers
-
     private Household findHouseholdOrThrow(UUID id) {
         return householdRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Id: " + id));
     }
-    
+
 }

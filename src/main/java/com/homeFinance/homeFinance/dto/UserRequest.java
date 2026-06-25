@@ -1,5 +1,7 @@
 package com.homeFinance.homeFinance.dto;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -14,6 +16,6 @@ public record UserRequest(
         @NotBlank(message = "The password is required")
         String password,
 
-        Long householdId
+        UUID householdId
         ) {
 } 
