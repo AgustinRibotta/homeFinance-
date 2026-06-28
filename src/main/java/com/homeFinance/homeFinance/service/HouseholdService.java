@@ -9,5 +9,4 @@ public interface HouseholdService {
     HouseholdResponse create(HouseholdRequest request);
     HouseholdResponse findById(UUID id);
     HouseholdResponse update(UUID id, HouseholdRequest request);
-    void addMember(UUID HouseholdId, UUID userId);
 }
