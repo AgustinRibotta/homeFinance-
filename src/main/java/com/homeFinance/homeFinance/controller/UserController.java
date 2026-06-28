@@ -1,13 +1,13 @@
 package com.homeFinance.homeFinance.controller;
 
+import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import com.homeFinance.homeFinance.dto.UserRequest;
 import com.homeFinance.homeFinance.dto.UserResponse;
 import com.homeFinance.homeFinance.service.UserService;
 
@@ -31,4 +31,13 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
     
+    @Operation(summary = "Create new user")
+    @PostMapping
+    public ResponseEntity<UserResponse> post (@Validated @RequestBody UserRequest request){
+        UserResponse response = userService.create(request);
+        URI location = URI.create("/api/v1/users/" + response.id());
+        return ResponseEntity.created(location).body(response);
+            
+    }
+
 }
