@@ -8,9 +8,12 @@ import java.util.UUID;
 /**
  * Balance
  */
-@Table(name = "Balance")
+@Table(
+        name = "user_balance",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "period_id"})
+)
 @Entity
-public class Balance {
+public class UserBalance {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -32,7 +35,7 @@ public class Balance {
     @JoinColumn(name = "period_id", nullable = false)
     private Period period;
 
-    public Balance(UUID id, BigDecimal totalIncome, BigDecimal totalExpense, BigDecimal balance, User user, Period period) {
+    public UserBalance(UUID id, BigDecimal totalIncome, BigDecimal totalExpense, BigDecimal balance, User user, Period period) {
         this.id = id;
         this.totalIncome = totalIncome;
         this.totalExpense = totalExpense;
@@ -41,7 +44,7 @@ public class Balance {
         this.period = period;
     }
 
-    public Balance() {
+    public UserBalance() {
     }
 
     public UUID getId() {

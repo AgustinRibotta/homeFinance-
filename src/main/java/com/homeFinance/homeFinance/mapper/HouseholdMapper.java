@@ -9,8 +9,13 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface HouseholdMapper {
+
+    // users is not mapped here because a new Household starts empty
+    // (no users yet). Users are added later through their own
+    // creation flow, in the Service layer.
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    Household toEntity (HouseholdRequest request);
+    @Mapping(target = "users", ignore = true)
+    Household toEntity(HouseholdRequest request);
+
     HouseholdResponse toResponse(Household entity);
 }

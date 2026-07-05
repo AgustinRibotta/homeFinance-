@@ -17,15 +17,15 @@ public class Household {
     private String name;
 
     @OneToMany(mappedBy = "household", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> user;
+    private List<User> users;
 
     public Household() {
     }
 
-    public Household(UUID id, String name, List<User> user) {
+    public Household(UUID id, String name, List<User> users) {
         this.id = id;
         this.name = name;
-        this.user = user;
+        this.users = users;
     }
 
     public UUID getId() {
@@ -44,12 +44,11 @@ public class Household {
         this.name = name;
     }
 
-    public List<User> getUser() {
-        return user;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUser(List<User> user) {
-        this.user = user;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
-
 }
