@@ -9,7 +9,10 @@ import java.util.UUID;
 /**
  * Period
  */
-@Table(name = "periods")
+@Table(
+        name = "periods",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"household_id", "month"})
+)
 @Entity
 public class Period {
 
