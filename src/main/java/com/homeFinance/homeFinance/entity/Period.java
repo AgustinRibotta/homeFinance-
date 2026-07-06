@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -39,11 +41,13 @@ public class Period {
     @JoinColumn(name = "household_id", nullable = false)
     private Household household;
 
-    public Period(UUID id) {
-        this.id = id;
+    @OneToMany(mappedBy = "period", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserBalance> userBalances = new ArrayList<>();
+
+    public Period() {
     }
 
-    public Period(UUID id, YearMonth month, BigDecimal initialAmount, BigDecimal closingAmount, BigDecimal totalMonthExpense, Boolean isClosed, Household household) {
+    public Period(UUID id, YearMonth month, BigDecimal initialAmount, BigDecimal closingAmount, BigDecimal totalMonthExpense, Boolean isClosed, Household household, List<UserBalance> userBalances) {
         this.id = id;
         this.month = month;
         this.initialAmount = initialAmount;
@@ -51,6 +55,7 @@ public class Period {
         this.totalMonthExpense = totalMonthExpense;
         this.isClosed = isClosed;
         this.household = household;
+        this.userBalances = userBalances;
     }
 
     public UUID getId() {
@@ -107,5 +112,13 @@ public class Period {
 
     public void setHousehold(Household household) {
         this.household = household;
+    }
+
+    public List<UserBalance> getUserBalances() {
+        return userBalances;
+    }
+
+    public void setUserBalances(List<UserBalance> userBalances) {
+        this.userBalances = userBalances;
     }
 }
