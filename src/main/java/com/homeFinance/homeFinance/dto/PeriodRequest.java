@@ -1,18 +1,19 @@
 package com.homeFinance.homeFinance.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.UUID;
 
-import jakarta.validation.constraints.NotBlank;
-
 public record PeriodRequest(
 
-        @NotBlank(message = "Month is required")
+        @NotNull(message = "Month is required")
         YearMonth month,
 
         BigDecimal initialAmount,
-        
-        @NotBlank(message = "Household is required")
+
+        @NotNull(message = "Household is required")
         UUID householdId
-        ) {}
+) {
+}

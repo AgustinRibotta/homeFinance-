@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class UserServiceImp implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final HouseholdRepository householdRepository;
     private final UserMapper userMapper;
 
-    public UserServiceImp(UserRepository userRepository, HouseholdRepository householdRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, HouseholdRepository householdRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.householdRepository = householdRepository;
         this.userMapper = userMapper;
