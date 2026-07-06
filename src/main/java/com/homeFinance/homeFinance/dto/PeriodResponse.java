@@ -7,10 +7,10 @@ import java.util.UUID;
 public record PeriodResponse(
         UUID id,
         YearMonth month,
-        BigDecimal initalAmount,
+        BigDecimal initialAmount,
         BigDecimal closingAmount,
         BigDecimal totalMonthExpense,
         Boolean isClosed,
         HouseholdResponse household
-        ) {
+) {
 } 
