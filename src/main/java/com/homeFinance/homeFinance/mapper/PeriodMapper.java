@@ -1,7 +1,7 @@
 package com.homeFinance.homeFinance.mapper;
 
-import com.homeFinance.homeFinance.dto.PeriodRequest;
-import com.homeFinance.homeFinance.dto.PeriodResponse;
+import com.homeFinance.homeFinance.dto.request.PeriodRequest;
+import com.homeFinance.homeFinance.dto.response.PeriodResponse;
 import com.homeFinance.homeFinance.entity.Period;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

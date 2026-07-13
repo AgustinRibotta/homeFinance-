@@ -1,7 +1,7 @@
 package com.homeFinance.homeFinance.service.imp;
 
-import com.homeFinance.homeFinance.dto.UserRequest;
-import com.homeFinance.homeFinance.dto.UserResponse;
+import com.homeFinance.homeFinance.dto.request.UserRequest;
+import com.homeFinance.homeFinance.dto.response.UserResponse;
 import com.homeFinance.homeFinance.entity.Household;
 import com.homeFinance.homeFinance.entity.User;
 import com.homeFinance.homeFinance.mapper.UserMapper;

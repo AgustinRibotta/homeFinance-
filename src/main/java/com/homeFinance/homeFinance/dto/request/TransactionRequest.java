@@ -1,4 +1,4 @@
-package com.homeFinance.homeFinance.dto;
+package com.homeFinance.homeFinance.dto.request;
 
 import com.homeFinance.homeFinance.enums.TransactionType;
 import jakarta.validation.constraints.NotNull;
