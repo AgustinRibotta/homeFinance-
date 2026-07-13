@@ -1,4 +1,4 @@
-package com.homeFinance.homeFinance.dto;
+package com.homeFinance.homeFinance.dto.response;
 
 import com.homeFinance.homeFinance.entity.Period;
 import com.homeFinance.homeFinance.entity.User;

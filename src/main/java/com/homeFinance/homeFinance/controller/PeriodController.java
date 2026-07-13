@@ -1,7 +1,7 @@
 package com.homeFinance.homeFinance.controller;
 
-import com.homeFinance.homeFinance.dto.PeriodRequest;
-import com.homeFinance.homeFinance.dto.PeriodResponse;
+import com.homeFinance.homeFinance.dto.request.PeriodRequest;
+import com.homeFinance.homeFinance.dto.response.PeriodResponse;
 import com.homeFinance.homeFinance.service.PeriodService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

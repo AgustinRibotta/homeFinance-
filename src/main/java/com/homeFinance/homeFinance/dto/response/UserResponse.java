@@ -1,7 +1,6 @@
-package com.homeFinance.homeFinance.dto;
+package com.homeFinance.homeFinance.dto.response;
 
 import java.util.UUID;
-
 
 
 public record UserResponse(
@@ -9,4 +8,5 @@ public record UserResponse(
         String name,
         String email,
         HouseholdResponse household
-        ) {}
+) {
+}

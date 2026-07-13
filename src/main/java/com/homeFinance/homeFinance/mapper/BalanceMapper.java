@@ -1,6 +1,6 @@
 package com.homeFinance.homeFinance.mapper;
 
-import com.homeFinance.homeFinance.dto.BalanceResponse;
+import com.homeFinance.homeFinance.dto.response.BalanceResponse;
 import com.homeFinance.homeFinance.entity.UserBalance;
 import org.mapstruct.Mapper;
 
