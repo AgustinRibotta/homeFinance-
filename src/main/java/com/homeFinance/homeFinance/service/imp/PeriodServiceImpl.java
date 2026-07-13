@@ -20,12 +20,12 @@ public class PeriodServiceImpl implements PeriodService {
   private final PeriodRepository periodRepository;
   private final HouseholdRepository householdRepository;
   private final UserRepository userRepository;
-  private final BalanceRepository balanceRepository;
+  private final UserBalanceRepository balanceRepository;
   private final HouseholdSavingRepository householdSavingRepository;
   private final PeriodMapper periodMapper;
 
   public PeriodServiceImpl(PeriodRepository periodRepository, HouseholdRepository householdRepository,
-      UserRepository userRepository, BalanceRepository balanceRepository,
+      UserRepository userRepository, UserBalanceRepository balanceRepository,
       HouseholdSavingRepository householdSavingRepository, PeriodMapper periodMapper) {
     this.periodRepository = periodRepository;
     this.householdRepository = householdRepository;
