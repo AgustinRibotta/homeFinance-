@@ -8,4 +8,7 @@ import java.util.UUID;
 
 public interface UserBalanceRepository extends JpaRepository<UserBalance, UUID> {
   List<UserBalance> findByPeriodId(UUID periodId);
+
+  List<UserBalance> findByUserId(UUID userId);
+
 }

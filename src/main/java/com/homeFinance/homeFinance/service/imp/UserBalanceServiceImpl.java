@@ -1,5 +1,6 @@
 package com.homeFinance.homeFinance.service.imp;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -8,12 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.homeFinance.homeFinance.dto.response.UserBalanceResponse;
-import com.homeFinance.homeFinance.entity.Transaction;
+import com.homeFinance.homeFinance.entity.UserBalance;
+import com.homeFinance.homeFinance.enums.TransactionType;
+import com.homeFinance.homeFinance.exeption.ResourceNotFoundException;
 import com.homeFinance.homeFinance.mapper.UserBalanceMapper;
 import com.homeFinance.homeFinance.repository.PeriodRepository;
+import com.homeFinance.homeFinance.repository.TransactionRepository;
 import com.homeFinance.homeFinance.repository.UserBalanceRepository;
+import com.homeFinance.homeFinance.repository.UserRepository;
 import com.homeFinance.homeFinance.service.UserBalanceService;
-import com.sun.nio.sctp.IllegalUnbindException;
 
 /**
  * UserBalanceServiceImpl
@@ -25,37 +29,51 @@ public class UserBalanceServiceImpl implements UserBalanceService {
   private final UserBalanceRepository userBalanceRepository;
   private final PeriodRepository periodRepository;
   private final UserBalanceMapper userBalanceMapper;
+  private final UserRepository userRepository;
+  private final TransactionRepository transactionRepository;
 
   public UserBalanceServiceImpl(UserBalanceRepository userBalanceRepository, PeriodRepository periodRepository,
-      UserBalanceMapper userBalanceMapper) {
+      UserBalanceMapper userBalanceMapper, UserRepository userRepository, TransactionRepository transactionRepository) {
     this.userBalanceRepository = userBalanceRepository;
     this.periodRepository = periodRepository;
     this.userBalanceMapper = userBalanceMapper;
+    this.userRepository = userRepository;
+    this.transactionRepository = transactionRepository;
   }
 
   @Override
   public List<UserBalanceResponse> findBalanceByPeriodId(UUID periodId) {
     periodRepository.findById(periodId)
-        .orElseThrow(() -> new IllegalUnbindException("Period not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Period not found"));
     return userBalanceRepository.findByPeriodId(periodId).stream()
-        .map(balance -> {
-          UserBalanceResponse dto = userBalanceMapper.toResponse(balance);
-          return dto;
-        })
+        .map(userBalanceMapper::toResponse)
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<UserBalanceResponse> findBalanceByUserid(UUID userId) {
-    // TODO Auto-generated method stub
-    return null;
+  @Transactional
+  public List<UserBalanceResponse> findBalanceByUserId(UUID userId) {
+    userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    return userBalanceRepository.findByUserId(userId).stream()
+        .map(userBalanceMapper::toResponse)
+        .collect(Collectors.toList());
+
   }
 
   @Override
-  @Transactional
-  public UserBalanceResponse updateBalance(Transaction transacction) {
-    // TODO Auto-generated method stub
-    return null;
+  public void updateBalance(UUID userBalanceId) {
+    UserBalance balance = userBalanceRepository.findById(userBalanceId)
+        .orElseThrow(() -> new ResourceNotFoundException("User Balance not found"));
+
+    BigDecimal totalIncomi = transactionRepository.sumByUserBalanceIdAndType(userBalanceId, TransactionType.INCOME);
+    BigDecimal totalExpense = transactionRepository.sumByUserBalanceIdAndType(userBalanceId, TransactionType.EXPENSE);
+
+    balance.setTotalIncome(totalIncomi);
+    balance.setTotalExpense(totalExpense);
+    balance.setBalance(totalIncomi.subtract(totalExpense));
+
+    userBalanceRepository.save(balance);
   }
 
 }
