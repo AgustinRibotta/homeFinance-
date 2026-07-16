@@ -15,13 +15,13 @@ public class UserBalance {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Column(precision = 15, scale = 2)
+  @Column(nullable = false, precision = 15, scale = 2)
   private BigDecimal totalIncome = BigDecimal.ZERO;
 
-  @Column(precision = 15, scale = 2)
+  @Column(nullable = false, precision = 15, scale = 2)
   private BigDecimal totalExpense = BigDecimal.ZERO;
 
-  @Column(precision = 15, scale = 2)
+  @Column(nullable = false, precision = 15, scale = 2)
   private BigDecimal balance = BigDecimal.ZERO;
 
   @ManyToOne(fetch = FetchType.LAZY)

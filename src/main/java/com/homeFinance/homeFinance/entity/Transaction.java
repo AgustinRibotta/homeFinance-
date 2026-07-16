@@ -2,7 +2,6 @@ package com.homeFinance.homeFinance.entity;
 
 import com.homeFinance.homeFinance.enums.TransactionType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,81 +11,94 @@ import java.util.UUID;
 @Entity
 public class Transaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    private BigDecimal amount = BigDecimal.ZERO;
+  @Column(nullable = false, precision = 15, scale = 2)
+  private BigDecimal amount = BigDecimal.ZERO;
 
-    @Enumerated(EnumType.STRING)
-    private TransactionType type;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TransactionType type;
 
-    private String description;
+  @Column(length = 250)
+  private String description;
 
-    @CreationTimestamp
-    private LocalDate date;
+  @Column(nullable = true)
+  private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_balance_id", nullable = false)
-    private UserBalance userBalance;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_balance_id", nullable = false)
+  private UserBalance userBalance;
 
-    public Transaction() {
-    }
+  @Version
+  @Column(name = "version", nullable = false)
+  private Long version;
 
-    public Transaction(UUID id, BigDecimal amount, TransactionType type, String description, LocalDate date, UserBalance userBalance) {
-        this.id = id;
-        this.amount = amount;
-        this.type = type;
-        this.description = description;
-        this.date = date;
-        this.userBalance = userBalance;
-    }
+  public Transaction() {
+  }
 
-    public UUID getId() {
-        return id;
-    }
+  public Transaction(UUID id, BigDecimal amount, TransactionType type, String description, LocalDate date,
+      UserBalance userBalance) {
+    this.id = id;
+    this.amount = amount;
+    this.type = type;
+    this.description = description;
+    this.date = date;
+    this.userBalance = userBalance;
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
+  public BigDecimal getAmount() {
+    return amount;
+  }
 
-    public TransactionType getType() {
-        return type;
-    }
+  public void setAmount(BigDecimal amount) {
+    this.amount = amount;
+  }
 
-    public void setType(TransactionType type) {
-        this.type = type;
-    }
+  public TransactionType getType() {
+    return type;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setType(TransactionType type) {
+    this.type = type;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public LocalDate getDate() {
-        return date;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+  public LocalDate getDate() {
+    return date;
+  }
 
-    public UserBalance getUserBalance() {
-        return userBalance;
-    }
+  public void setDate(LocalDate date) {
+    this.date = date;
+  }
 
-    public void setUserBalance(UserBalance userBalance) {
-        this.userBalance = userBalance;
-    }
+  public UserBalance getUserBalance() {
+    return userBalance;
+  }
+
+  public void setUserBalance(UserBalance userBalance) {
+    this.userBalance = userBalance;
+  }
+
+  public Long getVersion() {
+    return version;
+  }
+
 }
