@@ -21,72 +21,101 @@ import jakarta.persistence.EntityNotFoundException;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // Error genérico — cualquier cosa no contemplada
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> handleAll(Exception ex, WebRequest request) {
-        ErrorDetails error = new ErrorDetails(
-                LocalDateTime.now(),
-                "An unexpected error occurred",
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
+  // Error genérico — cualquier cosa no contemplada
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorDetails> handleAll(Exception ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        "An unexpected error occurred",
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+  }
 
-    // Recurso no encontrado
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleNotFound(EntityNotFoundException ex, WebRequest request) {
-        ErrorDetails error = new ErrorDetails(
-                LocalDateTime.now(),
-                ex.getMessage(),
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
+  // Recurso no encontrado
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<ErrorDetails> handleNotFound(EntityNotFoundException ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        ex.getMessage(),
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
 
-    // Tipo de argumento inválido (ej: String en lugar de Long en el path)
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorDetails> handleTypeMismatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
-        ErrorDetails error = new ErrorDetails(
-                LocalDateTime.now(),
-                "Invalid parameter: " + ex.getName(),
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
+  // Tipo de argumento inválido (ej: String en lugar de Long en el path)
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ErrorDetails> handleTypeMismatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        "Invalid parameter: " + ex.getName(),
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
 
-    // Validaciones @Valid — devuelve el primer error encontrado, simple
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+  // Validaciones @Valid — devuelve el primer error encontrado, simple
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException ex,
+      HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-        String firstError = ex.getBindingResult().getFieldErrors()
-                .stream()
-                .findFirst()
-                .map(FieldError::getDefaultMessage)
-                .orElse("Validation error");
+    String firstError = ex.getBindingResult().getFieldErrors()
+        .stream()
+        .findFirst()
+        .map(FieldError::getDefaultMessage)
+        .orElse("Validation error");
 
-        ErrorDetails error = new ErrorDetails(
-                LocalDateTime.now(),
-                firstError,
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        firstError,
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
 
-    // Violación de constraint en base de datos (email duplicado, etc)
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorDetails> handleDataIntegrity(DataIntegrityViolationException ex, WebRequest request) {
-        ErrorDetails error = new ErrorDetails(
-                LocalDateTime.now(),
-                "Duplicate data",
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-    }
+  // Violación de constraint en base de datos (email duplicado, etc)
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ErrorDetails> handleDataIntegrity(DataIntegrityViolationException ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        "Duplicate data",
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
 
-    // Acceso denegado por falta de permisos
-    @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<ErrorDetails> handleAuthorizationDenied(AuthorizationDeniedException ex, WebRequest request) {
-        ErrorDetails error = new ErrorDetails(
-                LocalDateTime.now(),
-                "Unauthorized access",
-                request.getDescription(false));
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-    }
+  // Acceso denegado por falta de permisos
+  @ExceptionHandler(AuthorizationDeniedException.class)
+  public ResponseEntity<ErrorDetails> handleAuthorizationDenied(AuthorizationDeniedException ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        "Unauthorized access",
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+  }
+
+  // Resource not found
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ErrorDetails> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        ex.getMessage(),
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
+
+  @ExceptionHandler(InvalidPeriodStateException.class)
+  public ResponseEntity<ErrorDetails> handleInvalidPeriodState(InvalidPeriodStateException ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        ex.getMessage(),
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+
+  @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
+  public ResponseEntity<ErrorDetails> handleOptimisticLock(
+      org.springframework.orm.ObjectOptimisticLockingFailureException ex, WebRequest request) {
+    ErrorDetails error = new ErrorDetails(
+        LocalDateTime.now(),
+        "The resource was modified by another operation. Please retry.",
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
 }

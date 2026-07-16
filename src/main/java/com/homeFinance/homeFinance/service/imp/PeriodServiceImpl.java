@@ -3,6 +3,8 @@ package com.homeFinance.homeFinance.service.imp;
 import com.homeFinance.homeFinance.dto.request.PeriodRequest;
 import com.homeFinance.homeFinance.dto.response.PeriodResponse;
 import com.homeFinance.homeFinance.entity.*;
+import com.homeFinance.homeFinance.exeption.InvalidPeriodStateException;
+import com.homeFinance.homeFinance.exeption.ResourceNotFoundException;
 import com.homeFinance.homeFinance.mapper.PeriodMapper;
 import com.homeFinance.homeFinance.repository.*;
 import com.homeFinance.homeFinance.service.PeriodService;
@@ -20,12 +22,12 @@ public class PeriodServiceImpl implements PeriodService {
   private final PeriodRepository periodRepository;
   private final HouseholdRepository householdRepository;
   private final UserRepository userRepository;
-  private final BalanceRepository balanceRepository;
+  private final UserBalanceRepository balanceRepository;
   private final HouseholdSavingRepository householdSavingRepository;
   private final PeriodMapper periodMapper;
 
   public PeriodServiceImpl(PeriodRepository periodRepository, HouseholdRepository householdRepository,
-      UserRepository userRepository, BalanceRepository balanceRepository,
+      UserRepository userRepository, UserBalanceRepository balanceRepository,
       HouseholdSavingRepository householdSavingRepository, PeriodMapper periodMapper) {
     this.periodRepository = periodRepository;
     this.householdRepository = householdRepository;
@@ -39,7 +41,7 @@ public class PeriodServiceImpl implements PeriodService {
   @Transactional
   public PeriodResponse createPeriod(PeriodRequest request) {
     Household household = householdRepository.findById(request.householdId())
-        .orElseThrow(() -> new IllegalArgumentException("Household not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Household not found"));
 
     Period period = periodMapper.toEntity(request);
     period.setHousehold(household);
@@ -53,15 +55,7 @@ public class PeriodServiceImpl implements PeriodService {
     List<User> householdUsers = userRepository.findByHouseholdId(household.getId());
 
     List<UserBalance> balances = householdUsers.stream()
-        .map(user -> {
-          UserBalance userBalance = new UserBalance();
-          userBalance.setUser(user);
-          userBalance.setPeriod(saved);
-          userBalance.setTotalIncome(BigDecimal.ZERO);
-          userBalance.setTotalExpense(BigDecimal.ZERO);
-          userBalance.setBalance(BigDecimal.ZERO);
-          return userBalance;
-        })
+        .map(user -> createEmptyBalance(user, saved))
         .toList();
 
     balanceRepository.saveAll(balances);
@@ -79,10 +73,10 @@ public class PeriodServiceImpl implements PeriodService {
   public PeriodResponse closePeriod(UUID periodId) {
     // Validation
     Period period = periodRepository.findById(periodId)
-        .orElseThrow(() -> new IllegalArgumentException("Period not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Period not found"));
 
     if (period.getClosed()) {
-      throw new IllegalArgumentException("Period is already closed");
+      throw new InvalidPeriodStateException("Period is already closed");
     }
 
     List<UserBalance> balances = balanceRepository.findByPeriodId(periodId);
@@ -105,19 +99,24 @@ public class PeriodServiceImpl implements PeriodService {
 
     Period closed = periodRepository.save(period);
 
-    // Once close, the period's total balance is added to the household's saving
     HouseholdSaving savings = householdSavingRepository
         .findByHouseholdId(period.getHousehold().getId())
-        .orElseGet(() -> {
-          HouseholdSaving newSavings = new HouseholdSaving();
-          newSavings.setHousehold(period.getHousehold());
-          newSavings.setTotalSaving(BigDecimal.ZERO);
-          return newSavings;
-        });
+        .orElseThrow(() -> new IllegalStateException(
+            "HouseholdSaving not initialized for household " + period.getHousehold().getId()));
 
     savings.addPeriodBalance(totalBalance);
     householdSavingRepository.save(savings);
 
     return periodMapper.toResponse(closed);
+  }
+
+  private UserBalance createEmptyBalance(User user, Period period) {
+    UserBalance balance = new UserBalance();
+    balance.setUser(user);
+    balance.setPeriod(period);
+    balance.setTotalIncome(BigDecimal.ZERO);
+    balance.setTotalExpense(BigDecimal.ZERO);
+    balance.setBalance(BigDecimal.ZERO);
+    return balance;
   }
 }

@@ -6,7 +6,7 @@ import com.homeFinance.homeFinance.entity.User;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record BalanceResponse(
+public record UserBalanceResponse(
         UUID id,
 
         BigDecimal totalIncome,
