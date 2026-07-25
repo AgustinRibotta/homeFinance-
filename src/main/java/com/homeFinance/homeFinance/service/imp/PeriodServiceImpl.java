@@ -23,12 +23,12 @@ public class PeriodServiceImpl implements PeriodService {
   private final HouseholdRepository householdRepository;
   private final UserRepository userRepository;
   private final UserBalanceRepository balanceRepository;
-  private final HouseholdSavingRepository householdSavingRepository;
+  private final HouseholdSavingsRepository householdSavingRepository;
   private final PeriodMapper periodMapper;
 
   public PeriodServiceImpl(PeriodRepository periodRepository, HouseholdRepository householdRepository,
       UserRepository userRepository, UserBalanceRepository balanceRepository,
-      HouseholdSavingRepository householdSavingRepository, PeriodMapper periodMapper) {
+      HouseholdSavingsRepository householdSavingRepository, PeriodMapper periodMapper) {
     this.periodRepository = periodRepository;
     this.householdRepository = householdRepository;
     this.userRepository = userRepository;
@@ -40,11 +40,23 @@ public class PeriodServiceImpl implements PeriodService {
   @Override
   @Transactional
   public PeriodResponse createPeriod(PeriodRequest request) {
+
     Household household = householdRepository.findById(request.householdId())
         .orElseThrow(() -> new ResourceNotFoundException("Household not found"));
 
+    if (periodRepository.existsByHouseholdIdAndMonth(household.getId(), request.month())) {
+      throw new InvalidPeriodStateException("Period already exists for this month");
+    }
+
     Period period = periodMapper.toEntity(request);
     period.setHousehold(household);
+
+    BigDecimal inheritedInitialAmount = periodRepository
+        .findTopByHouseholdIdOrderByMonthDesc(household.getId())
+        .map(Period::getClosingAmount)
+        .orElse(BigDecimal.ZERO);
+    period.setInitialAmount(inheritedInitialAmount);
+
     period.setClosingAmount(BigDecimal.ZERO);
     period.setTotalMonthExpense(BigDecimal.ZERO);
     period.setClosed(false);
@@ -99,7 +111,7 @@ public class PeriodServiceImpl implements PeriodService {
 
     Period closed = periodRepository.save(period);
 
-    HouseholdSaving savings = householdSavingRepository
+    HouseholdSavings savings = householdSavingRepository
         .findByHouseholdId(period.getHousehold().getId())
         .orElseThrow(() -> new IllegalStateException(
             "HouseholdSaving not initialized for household " + period.getHousehold().getId()));
