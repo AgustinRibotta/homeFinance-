@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "household_saving")
-public class HouseholdSaving {
+public class HouseholdSavings {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,10 +23,10 @@ public class HouseholdSaving {
   @Column(name = "version", nullable = false)
   private Long version;
 
-  public HouseholdSaving() {
+  public HouseholdSavings() {
   }
 
-  public HouseholdSaving(UUID id, BigDecimal totalSaving, Household household) {
+  public HouseholdSavings(UUID id, BigDecimal totalSaving, Household household) {
     this.id = id;
     this.totalSaving = totalSaving != null ? totalSaving : BigDecimal.ZERO;
     this.household = household;

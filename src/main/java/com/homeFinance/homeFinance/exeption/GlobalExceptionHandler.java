@@ -118,4 +118,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         request.getDescription(false));
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
+
+  @ExceptionHandler(DuplicateResourceException.class)
+  public ResponseEntity<ErrorDetails> handleDuplicateResource(DuplicateResourceException ex) {
+    ErrorDetails errorDetails = new ErrorDetails(
+        LocalDateTime.now(),
+        ex.getMessage(),
+        "Resource already exists");
+    return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+  }
 }

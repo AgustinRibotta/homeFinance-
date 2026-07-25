@@ -4,6 +4,7 @@ import com.homeFinance.homeFinance.dto.request.UserRequest;
 import com.homeFinance.homeFinance.dto.response.UserResponse;
 import com.homeFinance.homeFinance.entity.Household;
 import com.homeFinance.homeFinance.entity.User;
+import com.homeFinance.homeFinance.exeption.DuplicateResourceException;
 import com.homeFinance.homeFinance.exeption.ResourceNotFoundException;
 import com.homeFinance.homeFinance.mapper.UserMapper;
 import com.homeFinance.homeFinance.repository.HouseholdRepository;
@@ -39,6 +40,9 @@ public class UserServiceImpl implements UserService {
     Household household = householdRepository.findById(request.householdId())
         .orElseThrow(() -> new ResourceNotFoundException("Household not found"));
 
+    if (userRepository.existsByEmail(request.email())) {
+      throw new DuplicateResourceException("Email already registered");
+    }
     User user = userMapper.toEntity(request);
     user.setPassword(passwordEncoder.encode(request.password()));
     user.setHousehold(household);

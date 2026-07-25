@@ -2,6 +2,7 @@ package com.homeFinance.homeFinance.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,46 +10,54 @@ import java.util.UUID;
 @Table(name = "household")
 public class Household {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(length = 50, nullable = false)
-    private String name;
+  @Column(length = 100, nullable = false)
+  private String name;
 
-    @OneToMany(mappedBy = "household", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users;
+  @OneToMany(mappedBy = "household", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<User> users = new ArrayList<>();
 
-    public Household() {
-    }
+  @Version
+  @Column(name = "version", nullable = false)
+  private Long version;
 
-    public Household(UUID id, String name, List<User> users) {
-        this.id = id;
-        this.name = name;
-        this.users = users;
-    }
+  public Household() {
+  }
 
-    public UUID getId() {
-        return id;
-    }
+  public Household(UUID id, String name, List<User> users) {
+    this.id = id;
+    this.name = name;
+    this.users = users != null ? new ArrayList<>(users) : new ArrayList<>();
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public List<User> getUsers() {
-        return users;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+  public List<User> getUsers() {
+    return users;
+  }
+
+  public void setUsers(List<User> users) {
+    this.users = users;
+  }
+
+  public Long getVersion() {
+    return version;
+  }
 }
