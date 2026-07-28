@@ -1,6 +1,7 @@
 package com.homeFinance.homeFinance.repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,5 +22,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
   BigDecimal sumByUserBalanceIdAndType(
       @Param("userBalanceId") UUID userBalanceId,
       @Param("type") TransactionType type);
+
+  List<Transaction> findByUserBalanceIdOrderByDateDesc(UUID userBalanceId);
 
 }
