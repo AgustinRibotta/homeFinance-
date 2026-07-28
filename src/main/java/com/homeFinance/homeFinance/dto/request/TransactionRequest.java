@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public record TransactionRequest(
 
@@ -17,9 +16,7 @@ public record TransactionRequest(
 
     @Size(max = 255, message = "Description cannot exceed 255 characters") String description,
 
-    @NotNull(message = "Data is required") LocalDate data,
-
-    @NotNull(message = "userBalanceId is required") UUID userBalanceId
+    @NotNull(message = "Data is required") LocalDate data
 
 ) {
 }

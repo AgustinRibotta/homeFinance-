@@ -11,7 +11,7 @@ import com.homeFinance.homeFinance.dto.response.TransactionResponse;
  */
 public interface TransactionService {
 
-  TransactionResponse newTransaction(TransactionRequest transaction);
+  TransactionResponse newTransaction(TransactionRequest transaction, UUID userBalanceId);
 
   List<TransactionResponse> findByUserBalanceId(UUID userBalanceId);
 }

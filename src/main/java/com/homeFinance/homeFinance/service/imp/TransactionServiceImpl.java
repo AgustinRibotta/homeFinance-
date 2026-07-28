@@ -26,10 +26,10 @@ import com.homeFinance.homeFinance.service.UserBalanceService;
 @Transactional(readOnly = true)
 public class TransactionServiceImpl implements TransactionService {
 
-  final private TransactionRepository transactionRepository;
-  final private TransactionMapper transactionMapper;
-  final private UserBalanceRepository userBalanceRepository;
-  final private UserBalanceService userBalanceService;
+  private final TransactionRepository transactionRepository;
+  private final TransactionMapper transactionMapper;
+  private final UserBalanceRepository userBalanceRepository;
+  private final UserBalanceService userBalanceService;
 
   public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionMapper transactionMapper,
       UserBalanceRepository userBalanceRepository, UserBalanceService userBalanceService) {
@@ -51,8 +51,8 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   @Transactional
-  public TransactionResponse newTransaction(TransactionRequest request) {
-    UserBalance balance = userBalanceRepository.findById(request.userBalanceId())
+  public TransactionResponse newTransaction(TransactionRequest request, UUID userBalaceId) {
+    UserBalance balance = userBalanceRepository.findById(userBalaceId)
         .orElseThrow(() -> new ResourceNotFoundException("User Balance Not found"));
 
     if (balance.getPeriod().getClosed()) {
@@ -63,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
     transaction.setUserBalance(balance);
 
     transactionRepository.save(transaction);
-    userBalanceService.updateBalance(request.userBalanceId());
+    userBalanceService.updateBalance(userBalaceId);
 
     return transactionMapper.toResponse(transaction);
   }
