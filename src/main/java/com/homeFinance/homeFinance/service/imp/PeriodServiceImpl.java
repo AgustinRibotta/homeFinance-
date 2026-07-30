@@ -58,8 +58,9 @@ public class PeriodServiceImpl implements PeriodService {
     period.setInitialAmount(inheritedInitialAmount);
 
     period.setClosingAmount(BigDecimal.ZERO);
+    period.setTotalMonthIncome(BigDecimal.ZERO);
     period.setTotalMonthExpense(BigDecimal.ZERO);
-    period.setClosed(false);
+    period.setIsClosed(false);
 
     Period saved = periodRepository.save(period);
 
@@ -87,7 +88,7 @@ public class PeriodServiceImpl implements PeriodService {
     Period period = periodRepository.findById(periodId)
         .orElseThrow(() -> new ResourceNotFoundException("Period not found"));
 
-    if (period.getClosed()) {
+    if (period.getIsClosed()) {
       throw new InvalidPeriodStateException("Period is already closed");
     }
 
@@ -95,6 +96,10 @@ public class PeriodServiceImpl implements PeriodService {
 
     BigDecimal totalMonthExpense = balances.stream()
         .map(UserBalance::getTotalExpense)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    BigDecimal totalMonthIncome = balances.stream()
+        .map(UserBalance::getTotalIncome)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     BigDecimal totalBalance = balances.stream()
@@ -105,9 +110,10 @@ public class PeriodServiceImpl implements PeriodService {
         ? period.getInitialAmount()
         : BigDecimal.ZERO;
 
+    period.setTotalMonthIncome(totalMonthIncome);
     period.setTotalMonthExpense(totalMonthExpense);
     period.setClosingAmount(initial.add(totalBalance));
-    period.setClosed(true);
+    period.setIsClosed(true);
 
     Period closed = periodRepository.save(period);
 

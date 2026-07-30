@@ -67,7 +67,7 @@ public class UserBalanceServiceImpl implements UserBalanceService {
     UserBalance balance = userBalanceRepository.findById(userBalanceId)
         .orElseThrow(() -> new ResourceNotFoundException("User Balance not found"));
 
-    if (balance.getPeriod().getClosed()) {
+    if (balance.getPeriod().getIsClosed()) {
       throw new InvalidPeriodStateException("Cannot update balance of a closed period");
     }
 

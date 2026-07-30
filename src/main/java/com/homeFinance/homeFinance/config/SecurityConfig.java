@@ -48,7 +48,7 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/doc/**", "/households/**", "/users/**").permitAll()
+            .requestMatchers("/doc/**", "/households/**", "/users/**", "/balances/**", "periods/**").permitAll()
             .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2 -> oauth2
             .jwt(jwt -> jwt

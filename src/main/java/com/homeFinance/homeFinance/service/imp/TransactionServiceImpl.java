@@ -55,7 +55,7 @@ public class TransactionServiceImpl implements TransactionService {
     UserBalance balance = userBalanceRepository.findById(userBalaceId)
         .orElseThrow(() -> new ResourceNotFoundException("User Balance Not found"));
 
-    if (balance.getPeriod().getClosed()) {
+    if (balance.getPeriod().getIsClosed()) {
       throw new InvalidPeriodStateException("Cannot generate new transaction of a close period");
     }
 
