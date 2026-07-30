@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/household")
+@RequestMapping("/households")
 public class HouseholdSavingController {
 
-    private final HouseholdSavingService householdSavingService;
+  private final HouseholdSavingService householdSavingService;
 
-    public HouseholdSavingController(HouseholdSavingService householdSavingService) {
-        this.householdSavingService = householdSavingService;
-    }
+  public HouseholdSavingController(HouseholdSavingService householdSavingService) {
+    this.householdSavingService = householdSavingService;
+  }
 
-    @GetMapping("/{householdId}/savings")
-    public ResponseEntity<HouseholdSavingResponse> getSavings(@PathVariable UUID householdId) {
-        HouseholdSavingResponse response = householdSavingService.getSavingsByHousehold(householdId);
-        return ResponseEntity.ok(response);
-    }
+  @GetMapping("/{householdId}/savings")
+  public ResponseEntity<HouseholdSavingResponse> getSavings(@PathVariable UUID householdId) {
+    HouseholdSavingResponse response = householdSavingService.getSavingsByHousehold(householdId);
+    return ResponseEntity.ok(response);
+  }
 }

@@ -28,6 +28,9 @@ public class Period {
   private BigDecimal closingAmount = BigDecimal.ZERO;
 
   @Column(precision = 15, scale = 2)
+  private BigDecimal totalMonthIncome = BigDecimal.ZERO;
+
+  @Column(precision = 15, scale = 2)
   private BigDecimal totalMonthExpense = BigDecimal.ZERO;
 
   @Column(nullable = false)
@@ -44,19 +47,22 @@ public class Period {
   @Column(name = "version", nullable = false)
   private Long version;
 
-  public Period() {
-  }
-
   public Period(UUID id, YearMonth month, BigDecimal initialAmount, BigDecimal closingAmount,
-      BigDecimal totalMonthExpense, Boolean isClosed, Household household, List<UserBalance> userBalances) {
+      BigDecimal totalMonthIncome, BigDecimal totalMonthExpense, Boolean isClosed, Household household,
+      List<UserBalance> userBalances, Long version) {
     this.id = id;
     this.month = month;
     this.initialAmount = initialAmount;
     this.closingAmount = closingAmount;
+    this.totalMonthIncome = totalMonthIncome;
     this.totalMonthExpense = totalMonthExpense;
     this.isClosed = isClosed;
     this.household = household;
-    this.userBalances = userBalances != null ? new ArrayList<>(userBalances) : new ArrayList<>();
+    this.userBalances = userBalances;
+    this.version = version;
+  }
+
+  public Period() {
   }
 
   public UUID getId() {
@@ -91,6 +97,14 @@ public class Period {
     this.closingAmount = closingAmount;
   }
 
+  public BigDecimal getTotalMonthIncome() {
+    return totalMonthIncome;
+  }
+
+  public void setTotalMonthIncome(BigDecimal totalMonthIncome) {
+    this.totalMonthIncome = totalMonthIncome;
+  }
+
   public BigDecimal getTotalMonthExpense() {
     return totalMonthExpense;
   }
@@ -99,12 +113,12 @@ public class Period {
     this.totalMonthExpense = totalMonthExpense;
   }
 
-  public Boolean getClosed() {
+  public Boolean getIsClosed() {
     return isClosed;
   }
 
-  public void setClosed(Boolean closed) {
-    isClosed = closed;
+  public void setIsClosed(Boolean isClosed) {
+    this.isClosed = isClosed;
   }
 
   public Household getHousehold() {
@@ -126,4 +140,9 @@ public class Period {
   public Long getVersion() {
     return version;
   }
+
+  public void setVersion(Long version) {
+    this.version = version;
+  }
+
 }
