@@ -73,6 +73,8 @@ public class PeriodServiceImpl implements PeriodService {
 
     balanceRepository.saveAll(balances);
 
+    saved.setUserBalances(balances);
+
     return periodMapper.toResponse(saved);
   }
 
