@@ -1,34 +1,39 @@
 package com.homeFinance.homeFinance.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.homeFinance.homeFinance.dto.request.HouseholdRequest;
-import com.homeFinance.homeFinance.dto.request.UserRequest;
+import com.homeFinance.homeFinance.dto.request.LoginRequest;
+import com.homeFinance.homeFinance.dto.request.RegisterRequest;
 import com.homeFinance.homeFinance.dto.response.UserResponse;
-import com.homeFinance.homeFinance.service.HouseholdService;
-import com.homeFinance.homeFinance.service.UserService;
+import com.homeFinance.homeFinance.service.AuthService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * AuthController
  */
-@Tag(name = "Authenticaate")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-  private final UserService userService;
-  private final HouseholdService householdService;
+  private final AuthService authService;
+
+  public AuthController(AuthService authService) {
+    this.authService = authService;
+  }
 
   @PostMapping("/register")
-  public ResponseEntity<UserResponse> post(@Validated @RequestBody UserRequest userRequestm,
-      @Validated @RequestBody HouseholdRequest householdRequest) {
+  public ResponseEntity<UserResponse> register(@Validated @RequestBody RegisterRequest request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
+  }
 
+  @PostMapping("/login")
+  public ResponseEntity<UserResponse> login(@Validated @RequestBody LoginRequest request) {
+    return ResponseEntity.ok(authService.login(request));
   }
 }
