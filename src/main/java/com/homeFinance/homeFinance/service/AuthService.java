@@ -2,14 +2,14 @@ package com.homeFinance.homeFinance.service;
 
 import com.homeFinance.homeFinance.dto.request.LoginRequest;
 import com.homeFinance.homeFinance.dto.request.RegisterRequest;
-import com.homeFinance.homeFinance.dto.response.UserResponse;
+import com.homeFinance.homeFinance.dto.response.AuthResponse;
 
 /**
  * AuthService
  */
 public interface AuthService {
 
-  UserResponse login(LoginRequest request);
+  AuthResponse login(LoginRequest request);
 
-  UserResponse register(RegisterRequest request);
+  AuthResponse register(RegisterRequest request);
 }
