@@ -6,9 +6,9 @@ import com.homeFinance.homeFinance.dto.response.HouseholdResponse;
 import java.util.UUID;
 
 public interface HouseholdService {
-    HouseholdResponse create(HouseholdRequest request);
+  HouseholdResponse create(HouseholdRequest request);
 
-    HouseholdResponse findById(UUID id);
+  HouseholdResponse findById(UUID id);
 
-    HouseholdResponse update(UUID id, HouseholdRequest request);
+  HouseholdResponse update(UUID id, HouseholdRequest request);
 }

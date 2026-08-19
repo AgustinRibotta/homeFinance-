@@ -12,6 +12,7 @@ import com.homeFinance.homeFinance.dto.response.HouseholdResponse;
 import com.homeFinance.homeFinance.dto.response.UserResponse;
 import com.homeFinance.homeFinance.service.AuthService;
 import com.homeFinance.homeFinance.service.HouseholdService;
+import com.homeFinance.homeFinance.service.JwtService;
 import com.homeFinance.homeFinance.service.UserService;
 
 /**
@@ -22,10 +23,12 @@ public class AuthServiceImpl implements AuthService {
 
   private final UserService userService;
   private final HouseholdService householdService;
+  private final JwtService jwtService;
 
-  public AuthServiceImpl(UserService userService, HouseholdService householdService) {
+  public AuthServiceImpl(UserService userService, HouseholdService householdService, JwtService jwtService) {
     this.householdService = householdService;
     this.userService = userService;
+    this.jwtService = jwtService;
   }
 
   @Override
@@ -37,9 +40,10 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   public AuthResponse register(RegisterRequest request) {
     HouseholdResponse houseHold = householdService.create(new HouseholdRequest(request.householdName()));
-    UserResponse response = userService.create(
+    UserResponse user = userService.create(
         new UserRequest(request.userName(), request.email(), request.password(), houseHold.id()));
-    return new AuthResponse(toke, userId, name, houseHoldId);
+    String token = jwtService.generateToken(user);
+    return new AuthResponse(token, user.id(), user.name(), user.household().id());
   }
 
 }

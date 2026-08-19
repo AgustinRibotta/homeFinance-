@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.homeFinance.homeFinance.dto.request.LoginRequest;
 import com.homeFinance.homeFinance.dto.request.RegisterRequest;
 import com.homeFinance.homeFinance.dto.response.AuthResponse;
-import com.homeFinance.homeFinance.dto.response.UserResponse;
 import com.homeFinance.homeFinance.service.AuthService;
 
 /**
