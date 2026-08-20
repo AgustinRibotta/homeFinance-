@@ -1,7 +1,6 @@
 package com.homeFinance.homeFinance.config;
 
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -48,7 +46,8 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/doc/**", "/households/**", "/users/**", "/balances/**", "periods/**").permitAll()
+            .requestMatchers("/auth/**", "/doc/**", "/households/**", "/users/**", "/balances/**", "periods/**")
+            .permitAll()
             .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2 -> oauth2
             .jwt(jwt -> jwt
@@ -69,14 +68,7 @@ public class SecurityConfig {
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-    converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-      var permissions = jwt.getClaimAsStringList("role");
-      if (permissions == null)
-        permissions = Collections.emptyList();
-      return permissions.stream()
-          .map(SimpleGrantedAuthority::new)
-          .collect(Collectors.toList());
-    });
+    converter.setJwtGrantedAuthoritiesConverter(jwt -> Collections.emptyList());
     return converter;
   }
 

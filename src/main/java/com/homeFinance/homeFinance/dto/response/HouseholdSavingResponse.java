@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record HouseholdSavingResponse(
-        UUID id,
-        UUID householdId,
-        BigDecimal totalSaving
-) {
+    UUID id,
+    BigDecimal totalSaving) {
 }
