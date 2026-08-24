@@ -29,10 +29,10 @@ public class Invitation {
   private LocalDateTime expiresAt;
 
   @Column(name = "max_uses")
-  private Integer maxUses;
+  private Integer maxUsers;
 
-  @Column(name = "current_uses", nullable = false)
-  private int currentUses = 0;
+  @Column(name = "current_users", nullable = false)
+  private int currentUsers = 0;
 
   @Column(name = "active", nullable = false)
   private boolean active = true;
@@ -44,14 +44,14 @@ public class Invitation {
   public Invitation() {
   }
 
-  public Invitation(UUID id, String code, Household household, LocalDateTime expiresAt, Integer maxUses,
-      int currentUses, boolean active, User invitedBy) {
+  public Invitation(UUID id, String code, Household household, LocalDateTime expiresAt, Integer maxUsers,
+      int currentUsers, boolean active, User invitedBy) {
     this.id = id;
     this.code = code;
     this.household = household;
     this.expiresAt = expiresAt;
-    this.maxUses = maxUses;
-    this.currentUses = currentUses;
+    this.maxUsers = maxUsers;
+    this.currentUsers = currentUsers;
     this.active = active;
     this.invitedBy = invitedBy;
   }
@@ -88,20 +88,20 @@ public class Invitation {
     this.expiresAt = expiresAt;
   }
 
-  public Integer getMaxUses() {
-    return maxUses;
+  public Integer getMaxUsers() {
+    return maxUsers;
   }
 
-  public void setMaxUses(Integer maxUses) {
-    this.maxUses = maxUses;
+  public void setMaxUsers(Integer maxUses) {
+    this.maxUsers = maxUses;
   }
 
-  public int getCurrentUses() {
-    return currentUses;
+  public int getCurrentUsers() {
+    return currentUsers;
   }
 
-  public void setCurrentUses(int currentUses) {
-    this.currentUses = currentUses;
+  public void setCurrentUsers(int currentUsers) {
+    this.currentUsers = currentUsers;
   }
 
   public boolean isActive() {

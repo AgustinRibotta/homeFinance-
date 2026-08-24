@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
  */
 public record InvitationRequest(
     LocalDateTime expiresAt,
-    Integer maxUser) {
+    Integer maxUsers) {
 }

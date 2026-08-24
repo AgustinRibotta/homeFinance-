@@ -1,5 +1,6 @@
 package com.homeFinance.homeFinance.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,4 +14,6 @@ import com.homeFinance.homeFinance.entity.Invitation;
 public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
 
   Optional<Invitation> findByCode(String code);
+
+  List<Invitation> findByHouseholdIdAndActiveTrue(UUID householdId);
 }

@@ -127,4 +127,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         "Resource already exists");
     return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
   }
+
+  @ExceptionHandler(ForbiddenOperationException.class)
+  public ResponseEntity<ErrorDetails> handleForbidden(ForbiddenOperationException ex, WebRequest request) {
+    ErrorDetails errorDetails = new ErrorDetails(
+        LocalDateTime.now(),
+        ex.getMessage(),
+        request.getDescription(false));
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorDetails);
+  }
+
 }
