@@ -12,15 +12,13 @@ import com.homeFinance.homeFinance.dto.response.TransactionResponse;
 import com.homeFinance.homeFinance.entity.Transaction;
 import com.homeFinance.homeFinance.entity.UserBalance;
 import com.homeFinance.homeFinance.exeption.InvalidPeriodStateException;
-import com.homeFinance.homeFinance.exeption.ResourceNotFoundException;
 import com.homeFinance.homeFinance.mapper.TransactionMapper;
 import com.homeFinance.homeFinance.repository.TransactionRepository;
-import com.homeFinance.homeFinance.repository.UserBalanceRepository;
 import com.homeFinance.homeFinance.service.TransactionService;
 import com.homeFinance.homeFinance.service.UserBalanceService;
 
 /**
- * TransactionServiceImpl
+ * Transaction Service Implementation
  */
 @Service
 @Transactional(readOnly = true)
@@ -28,22 +26,18 @@ public class TransactionServiceImpl implements TransactionService {
 
   private final TransactionRepository transactionRepository;
   private final TransactionMapper transactionMapper;
-  private final UserBalanceRepository userBalanceRepository;
   private final UserBalanceService userBalanceService;
 
   public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionMapper transactionMapper,
-      UserBalanceRepository userBalanceRepository, UserBalanceService userBalanceService) {
+      UserBalanceService userBalanceService) {
     this.transactionRepository = transactionRepository;
     this.transactionMapper = transactionMapper;
-    this.userBalanceRepository = userBalanceRepository;
     this.userBalanceService = userBalanceService;
   }
 
   @Override
   public List<TransactionResponse> findByUserBalanceId(UUID userBalanceId) {
-    userBalanceRepository.findById(userBalanceId)
-        .orElseThrow(() -> new ResourceNotFoundException("User Balance not found"));
-
+    userBalanceService.findById(userBalanceId);
     return transactionRepository.findByUserBalanceIdOrderByDateDesc(userBalanceId).stream()
         .map(transactionMapper::toResponse)
         .collect(Collectors.toList());
@@ -51,15 +45,14 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   @Transactional
-  public TransactionResponse newTransaction(TransactionRequest request, UUID userBalaceId) {
-    UserBalance balance = userBalanceRepository.findById(userBalaceId)
-        .orElseThrow(() -> new ResourceNotFoundException("User Balance Not found"));
+  public TransactionResponse newTransaction(TransactionRequest req, UUID userBalaceId) {
+    UserBalance balance = userBalanceService.findEntityById(userBalaceId);
 
     if (balance.getPeriod().getIsClosed()) {
       throw new InvalidPeriodStateException("Cannot generate new transaction of a close period");
     }
 
-    Transaction transaction = transactionMapper.toEntity(request);
+    Transaction transaction = transactionMapper.toEntity(req);
     transaction.setUserBalance(balance);
 
     transactionRepository.save(transaction);
