@@ -46,12 +46,6 @@ public class HouseholdServiceImpl implements HouseholdService {
   }
 
   @Override
-  public HouseholdResponse findById(UUID id) {
-    Household entity = findHouseholdOrThrow(id);
-    return householdMapper.toResponse(entity);
-  }
-
-  @Override
   @Transactional
   public HouseholdResponse update(UUID id, HouseholdRequest request) {
     Household entity = findHouseholdOrThrow(id);
@@ -64,5 +58,16 @@ public class HouseholdServiceImpl implements HouseholdService {
   private Household findHouseholdOrThrow(UUID id) {
     return householdRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Household not found. Id: " + id));
+  }
+
+  @Override
+  public Household findEntityById(UUID id) {
+    return findHouseholdOrThrow(id);
+  }
+
+  @Override
+  public HouseholdResponse findById(UUID id) {
+    Household entity = findHouseholdOrThrow(id);
+    return householdMapper.toResponse(entity);
   }
 }
