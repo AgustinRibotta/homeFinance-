@@ -1,6 +1,7 @@
 package com.homeFinance.homeFinance.service.imp;
 
 import com.homeFinance.homeFinance.dto.response.HouseholdSavingResponse;
+import com.homeFinance.homeFinance.entity.Household;
 import com.homeFinance.homeFinance.entity.HouseholdSavings;
 import com.homeFinance.homeFinance.exeption.ResourceNotFoundException;
 import com.homeFinance.homeFinance.mapper.HouseholdSavingsMapper;
@@ -9,6 +10,7 @@ import com.homeFinance.homeFinance.service.HouseholdSavingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -30,5 +32,12 @@ public class HouseholdSavingsServiceImpl implements HouseholdSavingService {
         .orElseThrow(() -> new ResourceNotFoundException("No savings found for this household"));
 
     return householdSavingMapper.toResponse(saving);
+  }
+
+  @Override
+  public void create(Household household) {
+    HouseholdSavings savings = new HouseholdSavings();
+    savings.setHousehold(household);
+    savings.setTotalSaving(BigDecimal.ZERO);
   }
 }
