@@ -3,16 +3,14 @@ package com.homeFinance.homeFinance.service.imp;
 import com.homeFinance.homeFinance.dto.request.HouseholdRequest;
 import com.homeFinance.homeFinance.dto.response.HouseholdResponse;
 import com.homeFinance.homeFinance.entity.Household;
-import com.homeFinance.homeFinance.entity.HouseholdSavings;
 import com.homeFinance.homeFinance.exeption.ResourceNotFoundException;
 import com.homeFinance.homeFinance.mapper.HouseholdMapper;
 import com.homeFinance.homeFinance.repository.HouseholdRepository;
-import com.homeFinance.homeFinance.repository.HouseholdSavingsRepository;
+import com.homeFinance.homeFinance.service.HouseholdSavingService;
 import com.homeFinance.homeFinance.service.HouseholdService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -20,36 +18,31 @@ import java.util.UUID;
 public class HouseholdServiceImpl implements HouseholdService {
 
   private final HouseholdRepository householdRepository;
-  private final HouseholdSavingsRepository householdSavingRepository;
   private final HouseholdMapper householdMapper;
+  private final HouseholdSavingService householdSavingService;
 
   public HouseholdServiceImpl(HouseholdRepository householdRepository,
-      HouseholdSavingsRepository householdSavingRepository,
-      HouseholdMapper householdMapper) {
+      HouseholdMapper householdMapper,
+      HouseholdSavingService householdSavingService) {
     this.householdRepository = householdRepository;
-    this.householdSavingRepository = householdSavingRepository;
     this.householdMapper = householdMapper;
+    this.householdSavingService = householdSavingService;
   }
 
   @Override
   @Transactional
-  public HouseholdResponse create(HouseholdRequest request) {
-    Household entity = householdMapper.toEntity(request);
+  public HouseholdResponse create(HouseholdRequest req) {
+    Household entity = householdMapper.toEntity(req);
     Household saved = householdRepository.save(entity);
-
-    HouseholdSavings savings = new HouseholdSavings();
-    savings.setHousehold(saved);
-    savings.setTotalSaving(BigDecimal.ZERO);
-    householdSavingRepository.save(savings);
-
+    householdSavingService.create(saved);
     return householdMapper.toResponse(saved);
   }
 
   @Override
   @Transactional
-  public HouseholdResponse update(UUID id, HouseholdRequest request) {
+  public HouseholdResponse update(UUID id, HouseholdRequest req) {
     Household entity = findHouseholdOrThrow(id);
-    entity.setName(request.name());
+    entity.setName(req.name());
     Household saved = householdRepository.save(entity);
     return householdMapper.toResponse(saved);
   }
