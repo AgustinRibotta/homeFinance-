@@ -84,4 +84,20 @@ public class UserBalanceServiceImpl implements UserBalanceService {
     userBalanceRepository.save(balance);
   }
 
+  @Override
+  public UserBalance findEntityById(UUID id) {
+    return findUserBalanceOrThrow(id);
+  }
+
+  @Override
+  public UserBalanceResponse findById(UUID id) {
+    UserBalance entity = findUserBalanceOrThrow(id);
+    return userBalanceMapper.toResponse(entity);
+  }
+
+  // Helpers
+  private UserBalance findUserBalanceOrThrow(UUID id) {
+    return userBalanceRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("User balacen not found: " + id));
+  }
 }
