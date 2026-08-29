@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.homeFinance.homeFinance.dto.request.LoginRequest;
 import com.homeFinance.homeFinance.dto.request.RegisterRequest;
+import com.homeFinance.homeFinance.dto.request.RegisterWithInviteRequest;
 import com.homeFinance.homeFinance.dto.response.AuthResponse;
 import com.homeFinance.homeFinance.service.AuthService;
 
@@ -40,5 +41,9 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginRequest request) {
     return ResponseEntity.ok(authService.login(request));
+  }
+
+  public ResponseEntity<AuthResponse> registerWhithIvitation(RegisterWithInviteRequest request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerWhitInvitation(request));
   }
 }

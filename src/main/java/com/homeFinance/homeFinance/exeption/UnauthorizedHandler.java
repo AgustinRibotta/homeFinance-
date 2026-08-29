@@ -16,24 +16,23 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class UnauthorizedHandler implements AccessDeniedHandler {
 
-    private final ObjectMapper mapper;
+  private final ObjectMapper mapper;
 
-    public UnauthorizedHandler(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
+  public UnauthorizedHandler(ObjectMapper mapper) {
+    this.mapper = mapper;
+  }
 
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response,
-            AccessDeniedException accessDeniedException) throws IOException, ServletException {
+  @Override
+  public void handle(HttpServletRequest request, HttpServletResponse response,
+      AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        ErrorDetails errorDetails = new ErrorDetails(
-                LocalDateTime.now(),
-                accessDeniedException.getMessage(),
-                request.getRequestURI()
-        );
+    ErrorDetails errorDetails = new ErrorDetails(
+        LocalDateTime.now(),
+        accessDeniedException.getMessage(),
+        request.getRequestURI());
 
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.setContentType("application/json");
-        response.getWriter().write(mapper.writeValueAsString(errorDetails));
-    }
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    response.setContentType("application/json");
+    response.getWriter().write(mapper.writeValueAsString(errorDetails));
+  }
 }
